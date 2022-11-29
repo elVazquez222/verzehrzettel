@@ -28,4 +28,11 @@ module.exports = {
       },
     },
   ],
+  'prettier/prettier': [
+    'error',
+    {
+      'endOfLine': 'auto',
+    },
+  ],
+  "no-empty-function": "off"
 };
