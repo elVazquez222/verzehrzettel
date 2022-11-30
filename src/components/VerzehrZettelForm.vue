@@ -1,4 +1,3 @@
-<!-- eslint-disable prettier/prettier -->
 <template>
   <div class="verzehrZettelForm">
     <div class="formHeader">
