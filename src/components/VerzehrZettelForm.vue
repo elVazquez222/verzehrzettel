@@ -293,6 +293,7 @@ export default {
       numberOfWorkers_kitchen,
       drinksList,
       workersButtonDisabled,
+      salesAndHostelButtonDisabled,
       salesButtonDisabled,
       calculatedConsumption_service,
       calculatedConsumption_kitchen,
