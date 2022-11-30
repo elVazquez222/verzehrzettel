@@ -1,7 +1,6 @@
 <!-- eslint-disable prettier/prettier -->
 <template>
   <div class="verzehrZettelForm">
-    {{drinksList}}<br><br>
     <div class="formHeader">
       <div class="formHeaderElement">Getränk:</div>
       <div class="formHeaderElement smallerColumn">Preis:</div>
@@ -25,7 +24,6 @@
       >
       <span
         class="drinkColumn smallerColumn"
-        :style="{ textAlign: 'right', paddingRight: '4px' }"
         >{{ drink.displayPrice }}</span
       >
       <span class="drinkColumn drinksListByService">
@@ -44,6 +42,21 @@
       <span class="drinkColumn">{{ drink.wasted }}</span>
       <span class="drinkColumn">{{ drink.wasted }}</span>
       <span class="drinkColumn">{{ drink.wasted }}</span>
+    </div>
+
+    <div class="summations">
+      <span class="drinkColumn">Summe</span>
+      <span class="drinkColumn smallerColumn"></span>
+      <span class="drinkColumn">
+        <span v-if="calculatedConsumption_service > 0">{{calculatedConsumption_service}}0€</span>
+      </span>
+      <span class="drinkColumn">
+        <span v-if="calculatedConsumption_kitchen > 0">{{calculatedConsumption_kitchen}}0€</span>
+      </span>
+      <span class="drinkColumn"></span>
+      <span class="drinkColumn"></span>
+      <span class="drinkColumn"></span>
+      <span class="drinkColumn"></span>
     </div>
 
     <div class="inputs">
@@ -118,7 +131,9 @@ export default {
 
     const sales = ref(0);
     const hostel = ref(0);
-    let drinksList = ref([...drinks]);
+    const drinksList = ref([...drinks]);
+    const calculatedConsumption_service = ref(0);
+    const calculatedConsumption_kitchen = ref(0);
 
     const workersButtonDisabled = ref(true);
     const salesAndHostelButtonDisabled = ref(true);
@@ -150,7 +165,7 @@ export default {
     const calcConsumptionByWorkers = () => {
       sumOfConsumptionByWorkers_service.value =
         numberOfWorkers_service.value * consumptionByEachWorker;
-      let calculatedConsumption_service = 0;
+      calculatedConsumption_service.value = 0;
 
       const splitOneProduct_service = getRandomDrink();
       drinksList.value[splitOneProduct_service.index] = {
@@ -172,7 +187,7 @@ export default {
         const randomNumber = getRandomIndex(0, consumptionByWorkersSplit);
         switch (randomNumber) {
           case 1:
-            calculatedConsumption_service += splitOneProduct_service.price;
+            calculatedConsumption_service.value += splitOneProduct_service.price;
             drinksList.value[splitOneProduct_service.index].wastedByService.costSum =
               Math.round(
                 (drinksList.value[
@@ -183,7 +198,7 @@ export default {
             drinksList.value[splitOneProduct_service.index].wastedByService.count += 1;
             break;
           case 2:
-            calculatedConsumption_service += splitTwoProduct_service.price;
+            calculatedConsumption_service.value += splitTwoProduct_service.price;
             drinksList.value[splitTwoProduct_service.index].wastedByService.costSum =
               Math.round(
                 (drinksList.value[
@@ -194,7 +209,7 @@ export default {
             drinksList.value[splitTwoProduct_service.index].wastedByService.count += 1;
             break;
           case 3:
-            calculatedConsumption_service += splitThreeProduct_service.price;
+            calculatedConsumption_service.value += splitThreeProduct_service.price;
             drinksList.value[splitThreeProduct_service.index].wastedByService.costSum =
               Math.round(
                 (drinksList.value[
@@ -206,12 +221,12 @@ export default {
             break;
         }
       } while (
-        calculatedConsumption_service < sumOfConsumptionByWorkers_service.value
+        calculatedConsumption_service.value < sumOfConsumptionByWorkers_service.value
       );
       // Küche
       sumOfConsumptionByWorkers_kitchen.value =
         numberOfWorkers_kitchen.value * consumptionByEachWorker;
-      let calculatedConsumption_kitchen = 0;
+      calculatedConsumption_kitchen.value = 0;
 
       const splitOneProduct_kitchen = getRandomDrink();
       drinksList.value[splitOneProduct_kitchen.index] = {
@@ -233,7 +248,7 @@ export default {
         const randomNumber = getRandomIndex(0, consumptionByWorkersSplit);
         switch (randomNumber) {
           case 1:
-            calculatedConsumption_kitchen += splitOneProduct_kitchen.price;
+            calculatedConsumption_kitchen.value += splitOneProduct_kitchen.price;
             drinksList.value[splitOneProduct_kitchen.index].wastedByKitchen.costSum =
               Math.round(
                 (drinksList.value[
@@ -244,7 +259,7 @@ export default {
             drinksList.value[splitOneProduct_kitchen.index].wastedByKitchen.count += 1;
             break;
           case 2:
-            calculatedConsumption_kitchen += splitTwoProduct_kitchen.price;
+            calculatedConsumption_kitchen.value += splitTwoProduct_kitchen.price;
             drinksList.value[splitTwoProduct_kitchen.index].wastedByKitchen.costSum =
               Math.round(
                 (drinksList.value[
@@ -255,7 +270,7 @@ export default {
             drinksList.value[splitTwoProduct_kitchen.index].wastedByKitchen.count += 1;
             break;
           case 3:
-            calculatedConsumption_kitchen += splitThreeProduct_kitchen.price;
+            calculatedConsumption_kitchen.value += splitThreeProduct_kitchen.price;
             drinksList.value[splitThreeProduct_kitchen.index].wastedByKitchen.costSum =
               Math.round(
                 (drinksList.value[
@@ -267,7 +282,7 @@ export default {
             break;
         }
       } while (
-        calculatedConsumption_kitchen < sumOfConsumptionByWorkers_kitchen.value
+        calculatedConsumption_kitchen.value < sumOfConsumptionByWorkers_kitchen.value
       );
       console.log(sumOfConsumptionByWorkers_kitchen);
     };
@@ -280,6 +295,8 @@ export default {
       drinksList,
       workersButtonDisabled,
       salesButtonDisabled,
+      calculatedConsumption_service,
+      calculatedConsumption_kitchen,
 
       handleNumberOfWorkersChange,
       handleNumberOfWorkersSubmit,
@@ -319,6 +336,8 @@ label {
 }
 .smallerColumn {
   flex: 1;
+  padding-right: 4px;
+  text-align: center;
 }
 
 .inputs {
@@ -343,6 +362,11 @@ label {
   justify-content: center;
   flex: 1;
   border: 2px solid cadetblue;
+}
+
+.summations {
+  display: flex;
+  border-left: 4px solid black;
 }
 
 .button {
