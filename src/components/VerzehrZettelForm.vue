@@ -1,3 +1,4 @@
+<!-- eslint-disable prettier/prettier -->
 <template>
   <div class="verzehrZettelForm">
     <div class="formHeader">
@@ -21,10 +22,7 @@
         }"
         >{{ drink.name }}</span
       >
-      <span
-        class="drinkColumn smallerColumn"
-        >{{ drink.displayPrice }}</span
-      >
+      <span class="drinkColumn smallerColumn">{{ drink.displayPrice }}</span>
       <span class="drinkColumn drinksListByService">
         {{
           drink.wastedByService &&
@@ -47,10 +45,14 @@
       <span class="drinkColumn">Summe</span>
       <span class="drinkColumn smallerColumn"></span>
       <span class="drinkColumn">
-        <span v-if="calculatedConsumption_service > 0">{{calculatedConsumption_service}}0€</span>
+        <span v-if="calculatedConsumption_service > 0">
+          {{ Math.round((calculatedConsumption_service + Number.EPSILON) * 100) / 100 }}€
+        </span>
       </span>
       <span class="drinkColumn">
-        <span v-if="calculatedConsumption_kitchen > 0">{{calculatedConsumption_kitchen}}0€</span>
+        <span v-if="calculatedConsumption_kitchen > 0">
+          {{ Math.round((calculatedConsumption_kitchen + Number.EPSILON) * 100) / 100 }}€
+        </span>
       </span>
       <span class="drinkColumn"></span>
       <span class="drinkColumn"></span>
@@ -155,10 +157,9 @@ export default {
     const handleNumberOfWorkersSubmit = () => {
       drinksList.value = [...drinks];
       setTimeout(() => {
-
         workersButtonDisabled.value = true;
         calcConsumptionByWorkers();
-      },1)
+      }, 1);
     };
 
     const calcConsumptionByWorkers = () => {
@@ -186,41 +187,57 @@ export default {
         const randomNumber = getRandomIndex(0, consumptionByWorkersSplit);
         switch (randomNumber) {
           case 1:
-            calculatedConsumption_service.value += splitOneProduct_service.price;
-            drinksList.value[splitOneProduct_service.index].wastedByService.costSum =
+            calculatedConsumption_service.value +=
+              splitOneProduct_service.price;
+            drinksList.value[
+              splitOneProduct_service.index
+            ].wastedByService.costSum =
               Math.round(
                 (drinksList.value[
                   splitOneProduct_service.index
                 ].wastedByService.costSum +=
                   splitOneProduct_service.price + Number.EPSILON) * 100
               ) / 100;
-            drinksList.value[splitOneProduct_service.index].wastedByService.count += 1;
+            drinksList.value[
+              splitOneProduct_service.index
+            ].wastedByService.count += 1;
             break;
           case 2:
-            calculatedConsumption_service.value += splitTwoProduct_service.price;
-            drinksList.value[splitTwoProduct_service.index].wastedByService.costSum =
+            calculatedConsumption_service.value +=
+              splitTwoProduct_service.price;
+            drinksList.value[
+              splitTwoProduct_service.index
+            ].wastedByService.costSum =
               Math.round(
                 (drinksList.value[
                   splitTwoProduct_service.index
                 ].wastedByService.costSum +=
                   splitTwoProduct_service.price + Number.EPSILON) * 100
               ) / 100;
-            drinksList.value[splitTwoProduct_service.index].wastedByService.count += 1;
+            drinksList.value[
+              splitTwoProduct_service.index
+            ].wastedByService.count += 1;
             break;
           case 3:
-            calculatedConsumption_service.value += splitThreeProduct_service.price;
-            drinksList.value[splitThreeProduct_service.index].wastedByService.costSum =
+            calculatedConsumption_service.value +=
+              splitThreeProduct_service.price;
+            drinksList.value[
+              splitThreeProduct_service.index
+            ].wastedByService.costSum =
               Math.round(
                 (drinksList.value[
                   splitThreeProduct_service.index
                 ].wastedByService.costSum +=
                   splitThreeProduct_service.price + Number.EPSILON) * 100
               ) / 100;
-            drinksList.value[splitThreeProduct_service.index].wastedByService.count += 1;
+            drinksList.value[
+              splitThreeProduct_service.index
+            ].wastedByService.count += 1;
             break;
         }
       } while (
-        calculatedConsumption_service.value < sumOfConsumptionByWorkers_service.value
+        calculatedConsumption_service.value <
+        sumOfConsumptionByWorkers_service.value
       );
       // Küche
       sumOfConsumptionByWorkers_kitchen.value =
@@ -247,41 +264,57 @@ export default {
         const randomNumber = getRandomIndex(0, consumptionByWorkersSplit);
         switch (randomNumber) {
           case 1:
-            calculatedConsumption_kitchen.value += splitOneProduct_kitchen.price;
-            drinksList.value[splitOneProduct_kitchen.index].wastedByKitchen.costSum =
+            calculatedConsumption_kitchen.value +=
+              splitOneProduct_kitchen.price;
+            drinksList.value[
+              splitOneProduct_kitchen.index
+            ].wastedByKitchen.costSum =
               Math.round(
                 (drinksList.value[
                   splitOneProduct_kitchen.index
                 ].wastedByKitchen.costSum +=
                   splitOneProduct_kitchen.price + Number.EPSILON) * 100
               ) / 100;
-            drinksList.value[splitOneProduct_kitchen.index].wastedByKitchen.count += 1;
+            drinksList.value[
+              splitOneProduct_kitchen.index
+            ].wastedByKitchen.count += 1;
             break;
           case 2:
-            calculatedConsumption_kitchen.value += splitTwoProduct_kitchen.price;
-            drinksList.value[splitTwoProduct_kitchen.index].wastedByKitchen.costSum =
+            calculatedConsumption_kitchen.value +=
+              splitTwoProduct_kitchen.price;
+            drinksList.value[
+              splitTwoProduct_kitchen.index
+            ].wastedByKitchen.costSum =
               Math.round(
                 (drinksList.value[
                   splitTwoProduct_kitchen.index
                 ].wastedByKitchen.costSum +=
                   splitTwoProduct_kitchen.price + Number.EPSILON) * 100
               ) / 100;
-            drinksList.value[splitTwoProduct_kitchen.index].wastedByKitchen.count += 1;
+            drinksList.value[
+              splitTwoProduct_kitchen.index
+            ].wastedByKitchen.count += 1;
             break;
           case 3:
-            calculatedConsumption_kitchen.value += splitThreeProduct_kitchen.price;
-            drinksList.value[splitThreeProduct_kitchen.index].wastedByKitchen.costSum =
+            calculatedConsumption_kitchen.value +=
+              splitThreeProduct_kitchen.price;
+            drinksList.value[
+              splitThreeProduct_kitchen.index
+            ].wastedByKitchen.costSum =
               Math.round(
                 (drinksList.value[
                   splitThreeProduct_kitchen.index
                 ].wastedByKitchen.costSum +=
                   splitThreeProduct_kitchen.price + Number.EPSILON) * 100
               ) / 100;
-            drinksList.value[splitThreeProduct_kitchen.index].wastedByKitchen.count += 1;
+            drinksList.value[
+              splitThreeProduct_kitchen.index
+            ].wastedByKitchen.count += 1;
             break;
         }
       } while (
-        calculatedConsumption_kitchen.value < sumOfConsumptionByWorkers_kitchen.value
+        calculatedConsumption_kitchen.value <
+        sumOfConsumptionByWorkers_kitchen.value
       );
       console.log(sumOfConsumptionByWorkers_kitchen);
     };
