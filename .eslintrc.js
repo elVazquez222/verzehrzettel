@@ -1,15 +1,28 @@
 module.exports = {
-    "env": {
-        "browser": true,
+  root: true,
+  env: {
+    node: true,
+  },
+  extends: [
+    "plugin:vue/vue3-essential",
+    "eslint:recommended",
+  ],
+  parserOptions: {
+    ecmaVersion: 2020,
+  },
+  rules: {
+    "no-console": process.env.NODE_ENV === "production" ? "warn" : "off",
+    "no-debugger": process.env.NODE_ENV === "production" ? "warn" : "off",
+  },
+  overrides: [
+    {
+      files: [
+        "**/__tests__/*.{t}s?(x)",
+        "**/tests/unit/**/*.spec.{t}s?(x)",
+      ],
+      env: {
+        jest: true,
+      },
     },
-    "extends": "plugin:vue/essential",
-    "parserOptions": {
-        "ecmaVersion": 12,
-        "sourceType": "module"
-    },
-    "plugins": [
-        "vue"
-    ],
-    "rules": {
-    }
+  ],
 };
