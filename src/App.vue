@@ -28,15 +28,12 @@
   color: #42b983;
 }
 
-@media print
-{
-    .noPrint
-    {
-        display: none !important;
-    }
-    #app {
-      padding: 0 2rem !important;
-    }
-
+@media print {
+  .noPrint {
+    display: none !important;
+  }
+  #app {
+    padding: 0 2rem !important;
+  }
 }
 </style>
