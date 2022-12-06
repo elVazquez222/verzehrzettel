@@ -40,7 +40,11 @@ s<!-- eslint-disable prettier/prettier -->
           {{`${drink.waste.count} (${drink.waste.costSum}€)`}}
         </span>
       </span>
-      <span class="drinkColumn">{{ drink.wasted }}</span>
+      <span class="drinkColumn">
+        <span v-if="drink.giveAway && drink.giveAway.count > 0">
+          {{`${drink.giveAway.count} (${drink.giveAway.costSum}€)`}}
+        </span>
+      </span>
       <span class="drinkColumn">{{ drink.wasted }}</span>
     </div>
 
@@ -63,7 +67,11 @@ s<!-- eslint-disable prettier/prettier -->
           {{ Math.round((sumOfWasteValue + Number.EPSILON) * 100) / 100 }}€
         </span>
       </span>
-      <span class="drinkColumn"></span>
+      <span class="drinkColumn">
+        <span v-if="sumOfWasteValue > 0">
+          {{ Math.round((sumOfGiveawaysValue + Number.EPSILON) * 100) / 100 }}€
+        </span>
+      </span>
       <span class="drinkColumn"></span>
     </div>
 
@@ -103,13 +111,14 @@ s<!-- eslint-disable prettier/prettier -->
         <div>
           <label for="hostel">Hostel: </label>
           <input type="number" name="hostel" v-model="hostel" />
-          <div
-            :class="[ 'button','noPrint', salesAndHostelButtonDisabled && 'disabled']"
-            @click="calculateWastes"
-          >
-            Ok
-          </div>
         </div>
+      </div>
+
+      <div
+        :class="[ 'button','noPrint']"
+        @click="calculateWastes"
+      >
+        Ok
       </div>
     </div>
     <span class="resetBtn" @click="reset">zurücksetzen</span>
@@ -336,7 +345,6 @@ export default {
           sumOfConsumptionByWorkers_kitchen.value
         );
       }
-      console.log(sumOfConsumptionByWorkers_kitchen);
     };
 
     const calcWasteAndGiveaways = () => {
@@ -345,123 +353,240 @@ export default {
       calculatedGiveaways.value = Math.floor(salesWithoutHostel / 100 * percentageOfGiveawaysBySales);
 
       // Verlust
-      sumOfWasteValue.value = 0;
-      const splitProductWaste_1 = getRandomDrink();
-      drinksList.value[splitProductWaste_1.index] = {
-        ...splitProductWaste_1,
-        waste: { count: 0, costSum: 0 },
-      };
-      const splitProductWaste_2 = getRandomDrink();
-      drinksList.value[splitProductWaste_2.index] = {
-        ...splitProductWaste_2,
-        waste: { count: 0, costSum: 0 },
-      };
-      const splitProductWaste_3 = getRandomDrink();
-      drinksList.value[splitProductWaste_3.index] = {
-        ...splitProductWaste_3,
-        waste: { count: 0, costSum: 0 },
-      };
-      const splitProductWaste_4 = getRandomDrink();
-      drinksList.value[splitProductWaste_4.index] = {
-        ...splitProductWaste_4,
-        waste: { count: 0, costSum: 0 },
-      };
-      const splitProductWaste_5 = getRandomDrink();
-      drinksList.value[splitProductWaste_5.index] = {
-        ...splitProductWaste_5,
-        waste: { count: 0, costSum: 0 },
-      };
-console.log('calculatedWaste.value', calculatedWaste.value);
-console.log('sumOfWasteValue.value', sumOfWasteValue.value);
-      do {
-        const randomNumber = getRandomIndex(0, wasteAndGiveawaysSplit);
-        switch (randomNumber) {
-          case 1:
-            sumOfWasteValue.value +=
-              splitProductWaste_1.price;
-            drinksList.value[
-              splitProductWaste_1.index
-            ].waste.costSum =
-              Math.round(
-                (drinksList.value[
-                  splitProductWaste_1.index
-                ].waste.costSum +=
-                  splitProductWaste_1.price + Number.EPSILON) * 100
-              ) / 100;
-            drinksList.value[
-              splitProductWaste_1.index
-            ].waste.count += 1;
-            break;
-          case 2:
-            sumOfWasteValue.value +=
-              splitProductWaste_2.price;
-            drinksList.value[
-              splitProductWaste_2.index
-            ].waste.costSum =
-              Math.round(
-                (drinksList.value[
-                  splitProductWaste_2.index
-                ].waste.costSum +=
-                  splitProductWaste_2.price + Number.EPSILON) * 100
-              ) / 100;
-            drinksList.value[
-              splitProductWaste_2.index
-            ].waste.count += 1;
-            break;
-          case 3:
-            sumOfWasteValue.value +=
-              splitProductWaste_3.price;
-            drinksList.value[
-              splitProductWaste_3.index
-            ].waste.costSum =
-              Math.round(
-                (drinksList.value[
-                  splitProductWaste_3.index
-                ].waste.costSum +=
-                  splitProductWaste_3.price + Number.EPSILON) * 100
-              ) / 100;
-            drinksList.value[
-              splitProductWaste_3.index
-            ].waste.count += 1;
-            break;
-          case 4:
-            sumOfWasteValue.value +=
-              splitProductWaste_4.price;
-            drinksList.value[
-              splitProductWaste_4.index
-            ].waste.costSum =
-              Math.round(
-                (drinksList.value[
-                  splitProductWaste_4.index
-                ].waste.costSum +=
-                  splitProductWaste_4.price + Number.EPSILON) * 100
-              ) / 100;
-            drinksList.value[
-              splitProductWaste_4.index
-            ].waste.count += 1;
-            break;
-          case 5:
-            sumOfWasteValue.value +=
-              splitProductWaste_5.price;
-            drinksList.value[
-              splitProductWaste_5.index
-            ].waste.costSum =
-              Math.round(
-                (drinksList.value[
-                  splitProductWaste_5.index
-                ].waste.costSum +=
-                  splitProductWaste_5.price + Number.EPSILON) * 100
-              ) / 100;
-            drinksList.value[
-              splitProductWaste_5.index
-            ].waste.count += 1;
-            break;
-        }
-      } while (
-        sumOfWasteValue.value <
-        calculatedWaste.value
-      );
+      if(salesWithoutHostel > 0) {
+        sumOfWasteValue.value = 0;
+        const splitProductWaste_1 = getRandomDrink();
+        drinksList.value[splitProductWaste_1.index] = {
+          ...splitProductWaste_1,
+          waste: { count: 0, costSum: 0 },
+        };
+        const splitProductWaste_2 = getRandomDrink();
+        drinksList.value[splitProductWaste_2.index] = {
+          ...splitProductWaste_2,
+          waste: { count: 0, costSum: 0 },
+        };
+        const splitProductWaste_3 = getRandomDrink();
+        drinksList.value[splitProductWaste_3.index] = {
+          ...splitProductWaste_3,
+          waste: { count: 0, costSum: 0 },
+        };
+        const splitProductWaste_4 = getRandomDrink();
+        drinksList.value[splitProductWaste_4.index] = {
+          ...splitProductWaste_4,
+          waste: { count: 0, costSum: 0 },
+        };
+        const splitProductWaste_5 = getRandomDrink();
+        drinksList.value[splitProductWaste_5.index] = {
+          ...splitProductWaste_5,
+          waste: { count: 0, costSum: 0 },
+        };
 
+        do {
+          const randomNumber = getRandomIndex(0, wasteAndGiveawaysSplit);
+          switch (randomNumber) {
+            case 1:
+              sumOfWasteValue.value +=
+                splitProductWaste_1.price;
+              drinksList.value[
+                splitProductWaste_1.index
+              ].waste.costSum =
+                Math.round(
+                  (drinksList.value[
+                    splitProductWaste_1.index
+                  ].waste.costSum +=
+                    splitProductWaste_1.price + Number.EPSILON) * 100
+                ) / 100;
+              drinksList.value[
+                splitProductWaste_1.index
+              ].waste.count += 1;
+              break;
+            case 2:
+              sumOfWasteValue.value +=
+                splitProductWaste_2.price;
+              drinksList.value[
+                splitProductWaste_2.index
+              ].waste.costSum =
+                Math.round(
+                  (drinksList.value[
+                    splitProductWaste_2.index
+                  ].waste.costSum +=
+                    splitProductWaste_2.price + Number.EPSILON) * 100
+                ) / 100;
+              drinksList.value[
+                splitProductWaste_2.index
+              ].waste.count += 1;
+              break;
+            case 3:
+              sumOfWasteValue.value +=
+                splitProductWaste_3.price;
+              drinksList.value[
+                splitProductWaste_3.index
+              ].waste.costSum =
+                Math.round(
+                  (drinksList.value[
+                    splitProductWaste_3.index
+                  ].waste.costSum +=
+                    splitProductWaste_3.price + Number.EPSILON) * 100
+                ) / 100;
+              drinksList.value[
+                splitProductWaste_3.index
+              ].waste.count += 1;
+              break;
+            case 4:
+              sumOfWasteValue.value +=
+                splitProductWaste_4.price;
+              drinksList.value[
+                splitProductWaste_4.index
+              ].waste.costSum =
+                Math.round(
+                  (drinksList.value[
+                    splitProductWaste_4.index
+                  ].waste.costSum +=
+                    splitProductWaste_4.price + Number.EPSILON) * 100
+                ) / 100;
+              drinksList.value[
+                splitProductWaste_4.index
+              ].waste.count += 1;
+              break;
+            case 5:
+              sumOfWasteValue.value +=
+                splitProductWaste_5.price;
+              drinksList.value[
+                splitProductWaste_5.index
+              ].waste.costSum =
+                Math.round(
+                  (drinksList.value[
+                    splitProductWaste_5.index
+                  ].waste.costSum +=
+                    splitProductWaste_5.price + Number.EPSILON) * 100
+                ) / 100;
+              drinksList.value[
+                splitProductWaste_5.index
+              ].waste.count += 1;
+              break;
+          }
+        } while (
+          sumOfWasteValue.value <
+          calculatedWaste.value
+        );
+
+      // Werbung
+        sumOfGiveawaysValue.value = 0;
+        const splitProductGiveAway_1 = getRandomDrink();
+        drinksList.value[splitProductGiveAway_1.index] = {
+          ...splitProductGiveAway_1,
+          giveAway: { count: 0, costSum: 0 },
+        };
+        const splitProductGiveAway_2 = getRandomDrink();
+        drinksList.value[splitProductGiveAway_2.index] = {
+          ...splitProductGiveAway_2,
+          giveAway: { count: 0, costSum: 0 },
+        };
+        const splitProductGiveAway_3 = getRandomDrink();
+        drinksList.value[splitProductGiveAway_3.index] = {
+          ...splitProductGiveAway_3,
+          giveAway: { count: 0, costSum: 0 },
+        };
+        const splitProductGiveAway_4 = getRandomDrink();
+        drinksList.value[splitProductGiveAway_4.index] = {
+          ...splitProductGiveAway_4,
+          giveAway: { count: 0, costSum: 0 },
+        };
+        const splitProductGiveAway_5 = getRandomDrink();
+        drinksList.value[splitProductGiveAway_5.index] = {
+          ...splitProductGiveAway_5,
+          giveAway: { count: 0, costSum: 0 },
+        };
+
+        do {
+          const randomNumber = getRandomIndex(0, wasteAndGiveawaysSplit);
+          switch (randomNumber) {
+            case 1:
+              sumOfGiveawaysValue.value +=
+                splitProductGiveAway_1.price;
+              drinksList.value[
+                splitProductGiveAway_1.index
+              ].giveAway.costSum =
+                Math.round(
+                  (drinksList.value[
+                    splitProductGiveAway_1.index
+                  ].giveAway.costSum +=
+                    splitProductGiveAway_1.price + Number.EPSILON) * 100
+                ) / 100;
+              drinksList.value[
+                splitProductGiveAway_1.index
+              ].giveAway.count += 1;
+              break;
+            case 2:
+              sumOfGiveawaysValue.value +=
+                splitProductGiveAway_2.price;
+              drinksList.value[
+                splitProductGiveAway_2.index
+              ].giveAway.costSum =
+                Math.round(
+                  (drinksList.value[
+                    splitProductGiveAway_2.index
+                  ].giveAway.costSum +=
+                    splitProductGiveAway_2.price + Number.EPSILON) * 100
+                ) / 100;
+              drinksList.value[
+                splitProductGiveAway_2.index
+              ].giveAway.count += 1;
+              break;
+            case 3:
+              sumOfGiveawaysValue.value +=
+                splitProductGiveAway_3.price;
+              drinksList.value[
+                splitProductGiveAway_3.index
+              ].giveAway.costSum =
+                Math.round(
+                  (drinksList.value[
+                    splitProductGiveAway_3.index
+                  ].giveAway.costSum +=
+                    splitProductGiveAway_3.price + Number.EPSILON) * 100
+                ) / 100;
+              drinksList.value[
+                splitProductGiveAway_3.index
+              ].giveAway.count += 1;
+              break;
+            case 4:
+              sumOfGiveawaysValue.value +=
+                splitProductGiveAway_4.price;
+              drinksList.value[
+                splitProductGiveAway_4.index
+              ].giveAway.costSum =
+                Math.round(
+                  (drinksList.value[
+                    splitProductGiveAway_4.index
+                  ].giveAway.costSum +=
+                    splitProductGiveAway_4.price + Number.EPSILON) * 100
+                ) / 100;
+              drinksList.value[
+                splitProductGiveAway_4.index
+              ].giveAway.count += 1;
+              break;
+            case 5:
+              sumOfGiveawaysValue.value +=
+                splitProductGiveAway_5.price;
+              drinksList.value[
+                splitProductGiveAway_5.index
+              ].giveAway.costSum =
+                Math.round(
+                  (drinksList.value[
+                    splitProductGiveAway_5.index
+                  ].giveAway.costSum +=
+                    splitProductGiveAway_5.price + Number.EPSILON) * 100
+                ) / 100;
+              drinksList.value[
+                splitProductGiveAway_5.index
+              ].giveAway.count += 1;
+              break;
+          }
+        } while (
+          sumOfGiveawaysValue.value <
+          calculatedGiveaways.value
+        );
+      }
     }
 
     const reset = () => {
@@ -481,6 +606,7 @@ console.log('sumOfWasteValue.value', sumOfWasteValue.value);
       calculatedConsumption_service,
       calculatedConsumption_kitchen,
       sumOfWasteValue,
+      sumOfGiveawaysValue,
 
       handleNumberOfWorkersChange,
       calculateWastes,
@@ -567,8 +693,15 @@ label {
   font-size: 12px;
   padding: 6px 4px;
   border-radius: 4px;
-  background: #2020cc;
+  background: #181849;
   color: white;
+  width: 100px;
+  height: 12px;
+  align-self: center;
+  text-align: center;
+}
+.button:hover {
+  background: #0a0a36;
 }
 .button.disabled {
   background: lightgrey;
