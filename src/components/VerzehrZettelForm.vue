@@ -77,8 +77,9 @@ s<!-- eslint-disable prettier/prettier -->
       <span class="drinkColumn"></span>
     </div>
 
+    <div class="inputsAreaLabel">Dienstverzehr, Verlust, Werbung:</div>
     <div class="inputs">
-      <div class="workers">
+      <div class="inputsGroup">
         <div class="inputLabelContainer">
           <label for="numberOfWorkers"># Service-Arbeiter </label>
           <input
@@ -105,7 +106,7 @@ s<!-- eslint-disable prettier/prettier -->
         </div>
       </div>
 
-      <div class="salesAndHostel">
+      <div class="inputsGroup">
         <div class="inputLabelContainer">
           <label for="umsatz">Umsatz </label>
           <input type="number" name="umsatz" v-model="sales" />
@@ -126,6 +127,29 @@ s<!-- eslint-disable prettier/prettier -->
     </div>
     <span class="resetBtn" @click="reset">zurücksetzen</span>
 
+    <div class="inputsAreaLabel">Personalverzehr (außer Dienst):</div>
+    <div class="inputs">
+      <div class="inputsGroup">
+        <div class="inputLabelContainer">
+          <label for="numberOfWorkers">Name </label>
+          <input
+            type="text"
+            name="staffDiscountName"
+            v-model="staffDiscount_name"
+            @change="handleStaffDiscountNameInput"
+          />
+        </div>
+        <div class="inputLabelContainer">
+          <label for="numberOfWorkers">Rabatt (€) </label>
+          <input
+            type="text"
+            name="staffDiscountDiscount"
+            v-model="staffDiscount_name"
+            @change="handleStaffDiscountNameInput"
+          />
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -666,12 +690,16 @@ label {
   text-align: center;
 }
 
-.inputs {
+.inputsAreaLabel {
   margin-top: 2rem;
+}
+
+.inputs {
   display: flex;
-  justify-content: space-between;
-  border: 2px solid cadetblue;
+  align-items: baseline;
   gap: 2rem;
+  border: 2px solid cadetblue;
+  padding: 6px;
 }
 
 .resetBtn {
@@ -681,25 +709,14 @@ label {
 }
 
 .calcNowCtaContainer {
-  flex: 1;
   display: flex;
   justify-content: center;
 }
 
-.workers {
+.inputsGroup {
   gap: 10px;
-  padding: 6px;
-}
-
-.salesAndHostel {
-  gap: 10px;
-  padding: 6px;
-}
-.workers,
-.salesAndHostel {
   display: flex;
   justify-content: center;
-  flex: 1;
 }
 
 .summations {
