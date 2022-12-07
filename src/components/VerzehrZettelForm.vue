@@ -127,7 +127,17 @@ s<!-- eslint-disable prettier/prettier -->
     </div>
     <span class="resetBtn" @click="reset">zurücksetzen</span>
 
-    <div class="inputsAreaLabel">Personalverzehr (außer Dienst):</div>
+
+    <div class="inputsAreaLabel">
+      <span>Personalverzehr (außer Dienst): </span>
+      <img alt="T&P" height="15" width="15" class="noPrint hintTrigger" src="../assets/info.png" @click="handleHintTriggerClick_staffDiscount" />
+      <Transition>
+        <div class="hint" v-if="shouldShowStaffDiscountHint">
+          <img alt="T&P" height="15" width="15" class="noPrint hintTrigger" src="../assets/bulb.png" @click="handleHintTriggerClick_staffDiscount" />
+          <span>Wenn ein Angestellter außerhalb des Deinstes etwas verzehrt, hier bitte den Namen und den Rabatt (den nicht gezahlten Teil des Originalpreises) angeben!</span>
+        </div>
+      </Transition>
+    </div>
     <div class="inputs">
       <div class="inputsGroup">
         <div class="inputLabelContainer">
@@ -148,6 +158,20 @@ s<!-- eslint-disable prettier/prettier -->
             @change="handleStaffDiscountNameInput"
           />
         </div>
+
+        <div class="calcNowCtaContainer">
+          <div
+            :class="[ 'button','noPrint']"
+            @click="addStaffDiscountEntry"
+          >
+            Ok
+          </div>
+          <Transition>
+            <span v-if="shouldShowStaffDiscountError" :style="{fontSize: '11px', color: '#8a2525', background: 'bisque', marginLeft: '4px', alignSelf: 'center'}">
+              Chill! Das Feature ist noch nicht fertig..
+            </span>
+          </Transition>
+        </div>
       </div>
     </div>
   </div>
@@ -157,6 +181,7 @@ s<!-- eslint-disable prettier/prettier -->
 import { ref } from "vue";
 
 import { drinks } from "../assets/drinks.js";
+import infoIcon from "../assets/info.png";
 
 export default {
   name: "VerzehrZettelForm",
@@ -189,6 +214,9 @@ export default {
     const workersButtonDisabled = ref(true);
     const salesAndHostelButtonDisabled = ref(true);
     const salesButtonDisabled = ref(true);
+
+    const shouldShowStaffDiscountHint = ref(false);
+    const shouldShowStaffDiscountError = ref(false);
 
     const getRandomIndex = (min = 0, max = drinksList.value.length - 1) => {
       const index = Math.round(Math.random() * (max - min) + min);
@@ -614,6 +642,19 @@ export default {
           calculatedGiveaways.value
         );
       }
+    };
+
+    const handleHintTriggerClick_staffDiscount = () => {
+      shouldShowStaffDiscountHint.value = !shouldShowStaffDiscountHint.value;
+    }
+
+    const addStaffDiscountEntry = () => {
+      if (!shouldShowStaffDiscountError.value) {
+        setTimeout(() => {
+          shouldShowStaffDiscountError.value = false;
+        }, 2500)
+      }
+      shouldShowStaffDiscountError.value = true;
     }
 
     const reset = () => {
@@ -634,9 +675,13 @@ export default {
       calculatedConsumption_kitchen,
       sumOfWasteValue,
       sumOfGiveawaysValue,
+      shouldShowStaffDiscountHint,
+      shouldShowStaffDiscountError,
 
       handleNumberOfWorkersChange,
       calculateWastes,
+      handleHintTriggerClick_staffDiscount,
+      addStaffDiscountEntry,
       reset
     };
   },
@@ -694,6 +739,19 @@ label {
   margin-top: 2rem;
 }
 
+.hintTrigger {
+  cursor: pointer;
+}
+
+.hint {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  background: cadetblue;
+  padding: 4px;
+  font-size: 12px;
+}
+
 .inputs {
   display: flex;
   align-items: baseline;
@@ -744,6 +802,18 @@ label {
 .button.disabled {
   background: lightgrey;
   color: grey;
+}
+
+.v-enter-active {
+  transition: height 50ms ease;
+}
+.v-leave-active {
+  transition: height 30ms ease;
+}
+
+.v-enter-from,
+.v-leave-to {
+  height: 0;
 }
 
 @media print {
