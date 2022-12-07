@@ -1,7 +1,6 @@
 s<!-- eslint-disable prettier/prettier -->
 <template>
   <div class="verzehrZettelForm" :id="shadowKey">
-    {{drinksList}}
     <div class="formHeader">
       <div class="formHeaderElement">Getränk:</div>
       <div class="formHeaderElement smallerColumn">Preis:</div>
@@ -11,6 +10,7 @@ s<!-- eslint-disable prettier/prettier -->
       <div class="formHeaderElement">Verlust:</div>
       <div class="formHeaderElement">Werbung:</div>
       <div class="formHeaderElement">Geschl. Gesellschaft:</div>
+      <div class="formHeaderElement">Pers. Verzehr:</div>
     </div>
 
     <div class="drinkRow" v-for="drink in drinksList" :key="drink.name">
@@ -46,6 +46,7 @@ s<!-- eslint-disable prettier/prettier -->
         </span>
       </span>
       <span class="drinkColumn">{{ drink.wasted }}</span>
+      <span class="drinkColumn">{{ drink.wasted }}</span>
     </div>
 
     <div class="summations">
@@ -72,6 +73,7 @@ s<!-- eslint-disable prettier/prettier -->
           {{ Math.round((sumOfGiveawaysValue + Number.EPSILON) * 100) / 100 }}€
         </span>
       </span>
+      <span class="drinkColumn"></span>
       <span class="drinkColumn"></span>
     </div>
 
@@ -644,6 +646,7 @@ label {
 }
 .formHeader {
   text-align: center;
+  font-size: 13px;
 }
 .drinkRow,
 .formHeader {
