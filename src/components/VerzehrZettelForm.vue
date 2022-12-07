@@ -77,6 +77,8 @@ s<!-- eslint-disable prettier/prettier -->
       <span class="drinkColumn"></span>
     </div>
 
+    <span class="resetBtn" @click="reset">Alles zurücksetzen</span>
+
     <div class="inputsAreaLabel">Dienstverzehr, Verlust, Werbung:</div>
     <div class="inputs">
       <div class="inputsGroup">
@@ -125,8 +127,6 @@ s<!-- eslint-disable prettier/prettier -->
         </div>
       </div>
     </div>
-    <span class="resetBtn" @click="reset">zurücksetzen</span>
-
 
     <div class="inputsAreaLabel">
       <span>Personalverzehr (außer Dienst): </span>
@@ -762,8 +762,9 @@ label {
 
 .resetBtn {
   cursor: pointer;
-  font-size: 12px;
+  font-size: 11px;
   color: royalblue;
+  text-decoration: underline;
 }
 
 .calcNowCtaContainer {
