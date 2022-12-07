@@ -77,8 +77,8 @@ s<!-- eslint-disable prettier/prettier -->
 
     <div class="inputs">
       <div class="workers">
-        <div>
-          <label for="numberOfWorkers">Anzahl Service-Arbeiter: </label>
+        <div class="inputLabelContainer">
+          <label for="numberOfWorkers"># Service-Arbeiter </label>
           <input
             type="number"
             name="numberOfWorkers"
@@ -86,8 +86,8 @@ s<!-- eslint-disable prettier/prettier -->
             @change="handleNumberOfWorkersChange"
           />
         </div>
-        <div>
-          <label for="numberOfWorkers">Anzahl Küchen-Arbeiter: </label>
+        <div class="inputLabelContainer">
+          <label for="numberOfWorkers"># Küchen-Arbeiter </label>
           <input
             type="number"
             name="numberOfWorkers"
@@ -104,21 +104,22 @@ s<!-- eslint-disable prettier/prettier -->
       </div>
 
       <div class="salesAndHostel">
-        <div>
-          <label for="umsatz">Umsatz: </label>
+        <div class="inputLabelContainer">
+          <label for="umsatz">Umsatz </label>
           <input type="number" name="umsatz" v-model="sales" />
         </div>
-        <div>
-          <label for="hostel">Hostel: </label>
+        <div class="inputLabelContainer">
+          <label for="hostel">Hostel </label>
           <input type="number" name="hostel" v-model="hostel" />
         </div>
       </div>
-
-      <div
-        :class="[ 'button','noPrint']"
-        @click="calculateWastes"
-      >
-        Ok
+      <div class="calcNowCtaContainer">
+        <div
+          :class="[ 'button','noPrint']"
+          @click="calculateWastes"
+        >
+          Ok
+        </div>
       </div>
     </div>
     <span class="resetBtn" @click="reset">zurücksetzen</span>
@@ -623,8 +624,19 @@ button {
   cursor: pointer;
 }
 
+input {
+  text-align: right;
+}
+
 label {
-  display: block;
+  position: absolute;
+  font-size: 11px;
+  left: 8px;
+  top: 4px;
+}
+
+.inputLabelContainer {
+  position: relative;
 }
 
 .verzehrZettelForm {
@@ -663,6 +675,12 @@ label {
   cursor: pointer;
   font-size: 12px;
   color: royalblue;
+}
+
+.calcNowCtaContainer {
+  flex: 1;
+  display: flex;
+  justify-content: center;
 }
 
 .workers {
