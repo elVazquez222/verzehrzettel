@@ -13,7 +13,7 @@ s<!-- eslint-disable prettier/prettier -->
       <div class="formHeaderElement">Pers. Verzehr:</div>
     </div>
 
-    <div class="drinkRow" v-for="drink in drinksList" :key="drink.name">
+    <div class="drinkRow" v-for="drink in drinksList" :class="[getExtraClass(drink)]" :key="drink.name">
       <span
         class="drinkColumn"
         :style="{
@@ -246,8 +246,8 @@ export default {
         numberOfWorkers_service.value * consumptionByEachWorker;
       calculatedConsumption_service.value = 0;
 
+      // Service
       if (numberOfWorkers_service.value > 0) {
-        // Service
         const splitOneProduct_service = getRandomDrink();
         drinksList.value[splitOneProduct_service.index] = {
           ...splitOneProduct_service,
@@ -657,6 +657,15 @@ export default {
       shouldShowStaffDiscountError.value = true;
     }
 
+    const getExtraClass = (drink) => {
+      if(drink.wastedByService !== undefined
+          || drink.wastedByKitchen !== undefined
+          || drink.giveAway !== undefined
+          || drink.waste !== undefined) {
+        return 'highlightedRow'
+      }
+    }
+
     const reset = () => {
       location.reload();
     }
@@ -681,6 +690,7 @@ export default {
       handleNumberOfWorkersChange,
       calculateWastes,
       handleHintTriggerClick_staffDiscount,
+      getExtraClass,
       addStaffDiscountEntry,
       reset
     };
@@ -708,6 +718,10 @@ label {
 
 .inputLabelContainer {
   position: relative;
+}
+
+.highlightedRow {
+  background: rgba(20, 200, 20, .3);
 }
 
 .verzehrZettelForm {
@@ -758,6 +772,7 @@ label {
   gap: 2rem;
   border: 2px solid cadetblue;
   padding: 6px;
+  width: fit-content;
 }
 
 .resetBtn {
