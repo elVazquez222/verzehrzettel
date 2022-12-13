@@ -786,6 +786,8 @@ label {
 
 .verzehrZettelForm {
   margin: 1rem 0;
+  width: 95vw;
+  max-width: 1400px;
 }
 .formHeader {
   text-align: center;
@@ -824,6 +826,7 @@ label {
   background: cadetblue;
   padding: 4px;
   font-size: 12px;
+  max-width: fit-content;
 }
 
 .drinkRow {
