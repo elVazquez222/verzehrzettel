@@ -679,8 +679,7 @@ export default {
     }
 
     const getExtraClass = (drink) => {
-      if(drink.wastedByService !== undefined
-          || (drink.wastedByKitchen !== undefined && drink.wastedByKitchen.costSum > 0)
+      if((drink.wastedByKitchen !== undefined && drink.wastedByKitchen.costSum > 0)
           || (drink.wastedByService !== undefined && drink.wastedByService.count > 0)
           || (drink.giveAway !== undefined && drink.giveAway.costSum > 0)
           || (drink.waste !== undefined && drink.waste.costSum > 0)) {
