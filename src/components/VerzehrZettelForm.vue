@@ -1,6 +1,7 @@
 s<!-- eslint-disable prettier/prettier -->
 <template>
   <div class="verzehrZettelForm" :id="shadowKey">
+{{drinksList}}
     <div class="formHeader">
       <div class="formHeaderElement">Getränk:</div>
       <div class="formHeaderElement smallerColumn">Preis:</div>
@@ -12,7 +13,6 @@ s<!-- eslint-disable prettier/prettier -->
       <div class="formHeaderElement">Geschl. Gesellschaft:</div>
       <div class="formHeaderElement">Pers. Verzehr:</div>
     </div>
-
     <div class="drinkRow" v-for="drink in drinksList" :class="[getExtraClass(drink)]" :key="drink.name">
       <span
         class="drinkColumn"
@@ -659,11 +659,12 @@ export default {
 
     const getExtraClass = (drink) => {
       if(drink.wastedByService !== undefined
-          || drink.wastedByKitchen !== undefined
-          || drink.giveAway !== undefined
-          || drink.waste !== undefined) {
-        return 'highlightedRow'
+          || (drink.wastedByKitchen !== undefined && drink.wastedByKitchen.costSum > 0)
+          || (drink.giveAway !== undefined && drink.giveAway.costSum > 0)
+          || (drink.waste !== undefined && drink.waste.costSum > 0)) {
+        return 'highlightedRow';
       }
+      return null;
     }
 
     const reset = () => {
