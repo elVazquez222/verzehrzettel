@@ -79,10 +79,14 @@ s<!-- eslint-disable prettier/prettier -->
     </div>
 
 
-    <div>
+    <div class="noPrint tableFooter">
       <span class="resetBtn" @click="reset">Alles zurücksetzen</span>
-      <input type="checkbox" name="shouldHideEmptyRows" id="shouldHideEmptyRows" v-model="shouldHideEmptyRows" />
-      <span class="shouldHideEmptyRowsLabel" @click="toggleShouldHideEmptyRows">Leere Zeilen ausblenden</span>
+      <div class="hideEmptyRowsToggle">
+        <input type="checkbox" name="shouldHideEmptyRows" id="shouldHideEmptyRows" v-model="shouldHideEmptyRows" />
+        <span class="shouldHideEmptyRowsLabel" @click="toggleShouldHideEmptyRows">
+          Leere Zeilen ausblenden
+        </span>
+      </div>
     </div>
 
     <div class="inputsAreaLabel">Dienstverzehr, Verlust, Werbung:</div>
@@ -721,12 +725,21 @@ label {
   top: 4px;
 }
 
-#shouldHideEmptyRows {
-  margin-left: 2rem;
+.tableFooter {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 5px;
+}
+
+.hideEmptyRowsToggle {
+  display: inline-flex;
+  align-items: center;
 }
 
 .shouldHideEmptyRowsLabel {
   cursor: pointer;
+  font-size: 12px;
 }
 
 .inputLabelContainer {
