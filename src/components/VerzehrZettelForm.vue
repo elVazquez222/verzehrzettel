@@ -1,7 +1,6 @@
 s<!-- eslint-disable prettier/prettier -->
 <template>
   <div class="verzehrZettelForm" :id="shadowKey">
-{{drinksList}}
     <div class="formHeader">
       <div class="formHeaderElement">Getränk:</div>
       <div class="formHeaderElement smallerColumn">Preis:</div>
@@ -26,24 +25,38 @@ s<!-- eslint-disable prettier/prettier -->
       >
       <span class="drinkColumn smallerColumn">{{ drink.displayPrice }}</span>
       <span class="drinkColumn drinksListByService">
-        <span v-if="drink.wastedByService && drink.wastedByService.count > 0">
-          {{`${drink.wastedByService.count} (${drink.wastedByService.costSum}€)`}}
+        <span class="drinkField" v-if="drink.wastedByService && drink.wastedByService.count > 0">
+          {{`${drink.wastedByService.count}`}}
+          <span class="drinkFieldCost">
+            {{`(${drink.wastedByService.costSum}€)`}}
+          </span>
         </span>
       </span>
       <span class="drinkColumn drinksListByKitchen">
-        <span v-if="drink.wastedByKitchen && drink.wastedByKitchen.count > 0">
-          {{`${drink.wastedByKitchen.count} (${drink.wastedByKitchen.costSum}€)`}}
+        <span class="drinkField" v-if="drink.wastedByKitchen && drink.wastedByKitchen.count > 0">
+          {{`${drink.wastedByKitchen.count}`}}
+          <span class="drinkFieldCost">
+             {{`(${drink.wastedByKitchen.costSum}€)`}}
+          </span>
         </span>
       </span>
       <span class="drinkColumn">{{ drink.wasted }}</span>
       <span class="drinkColumn">
-        <span v-if="drink.waste && drink.waste.count > 0">
-          {{`${drink.waste.count} (${drink.waste.costSum}€)`}}
+        <span class="drinkField" v-if="drink.waste && drink.waste.count > 0">
+          <span class="count">
+            {{`${drink.waste.count}`}}
+          </span>
+          <span class="drinkFieldCost">
+            {{`(${drink.waste.costSum} €)`}}
+          </span>
         </span>
       </span>
       <span class="drinkColumn">
-        <span v-if="drink.giveAway && drink.giveAway.count > 0">
-          {{`${drink.giveAway.count} (${drink.giveAway.costSum}€)`}}
+        <span class="drinkField" v-if="drink.giveAway && drink.giveAway.count > 0">
+          {{`${drink.giveAway.count}`}}
+          <span class="drinkFieldCost">
+           {{`(${drink.giveAway.costSum}€)`}}
+          </span>
         </span>
       </span>
       <span class="drinkColumn">{{ drink.wasted }}</span>
@@ -200,7 +213,7 @@ export default {
     const percentageOfWasteBySales = Math.random() + 6; // Zahl zwischen 6 und 7
     const percentageOfGiveawaysBySales = 10 - percentageOfWasteBySales;
     const drinksList = ref([...drinks]);
-    const shouldHideEmptyRows = ref(true);
+    const shouldHideEmptyRows = ref(false);
     const staffDiscountEntries = ref([{name: "Steve", discount: "6.55"}]);
 
     const numberOfWorkers_service = ref(0);
@@ -744,6 +757,20 @@ label {
 
 .inputLabelContainer {
   position: relative;
+}
+
+.drinkField {
+  position: relative;
+  display: block;
+}
+
+.drinkFieldCost {
+  position: absolute;
+  top: 1px;
+  right: 1px;
+  font-size: 10px;
+  background: rgba(255, 255, 255, .5);
+  padding: 0 1px;
 }
 
 .highlightedRow_light {
