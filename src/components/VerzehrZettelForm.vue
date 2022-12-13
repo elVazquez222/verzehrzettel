@@ -869,6 +869,7 @@ label {
 .summations {
   display: flex;
   border-left: 4px solid black;
+  border-top: 1px solid black;
 }
 
 .button {
