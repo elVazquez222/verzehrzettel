@@ -102,90 +102,93 @@ s<!-- eslint-disable prettier/prettier -->
       </div>
     </div>
 
-    <div class="inputsAreaLabel">Dienstverzehr, Verlust, Werbung:</div>
-    <div class="inputs">
-      <div class="inputsGroup">
-        <div class="inputLabelContainer">
-          <label for="numberOfWorkers"># Service-Arbeiter </label>
-          <input
-            type="number"
-            name="numberOfWorkers"
-            v-model="numberOfWorkers_service"
-          />
-        </div>
-        <div class="inputLabelContainer">
-          <label for="numberOfWorkers"># Küchen-Arbeiter </label>
-          <input
-            type="number"
-            name="numberOfWorkers"
-            v-model="numberOfWorkers_kitchen"
-          />
-        </div>
-      </div>
+    <div class="noPrint">
 
-      <div class="inputsGroup">
-        <div class="inputLabelContainer">
-          <label for="umsatz">Umsatz </label>
-          <input type="number" name="umsatz" v-model="sales" />
-        </div>
-        <div class="inputLabelContainer">
-          <label for="hostel">Hostel </label>
-          <input type="number" name="hostel" v-model="hostel" />
-        </div>
-      </div>
-      <div class="calcNowCtaContainer">
-        <div
-          :class="[ 'button','noPrint']"
-          @click="calculateWastes"
-        >
-          Ok
-        </div>
-      </div>
-    </div>
-
-    <div class="inputsAreaLabel">
-      <span>Personalverzehr (außer Dienst): </span>
-      <img alt="T&P" height="15" width="15" class="noPrint hintTrigger" src="../assets/info.png" @click="handleHintTriggerClick_staffDiscount" />
-      <Transition>
-        <div class="hint" v-if="shouldShowStaffDiscountHint">
-          <img alt="T&P" height="15" width="15" class="noPrint hintTrigger" src="../assets/bulb.png" @click="handleHintTriggerClick_staffDiscount" />
-          <span>Wenn ein Angestellter außerhalb des Deinstes etwas verzehrt, hier bitte den Namen und den Rabatt (den nicht gezahlten Teil des Originalpreises) angeben!</span>
-        </div>
-      </Transition>
-    </div>
-    <div class="inputs">
-      <div class="inputsGroup">
-        <div class="inputLabelContainer">
-          <label for="numberOfWorkers">Name </label>
-          <input
-            type="text"
-            name="staffDiscountName"
-            v-model="staffDiscount_name"
-            @change="handleStaffDiscountNameInput"
-          />
-        </div>
-        <div class="inputLabelContainer">
-          <label for="numberOfWorkers">Rabatt (€) </label>
-          <input
-            type="text"
-            name="staffDiscountDiscount"
-            v-model="staffDiscount_name"
-            @change="handleStaffDiscountNameInput"
-          />
+      <div class="inputsAreaLabel">Dienstverzehr, Verlust, Werbung:</div>
+      <div class="inputs">
+        <div class="inputsGroup">
+          <div class="inputLabelContainer">
+            <label for="numberOfWorkers"># Service-Arbeiter </label>
+            <input
+              type="number"
+              name="numberOfWorkers"
+              v-model="numberOfWorkers_service"
+            />
+          </div>
+          <div class="inputLabelContainer">
+            <label for="numberOfWorkers"># Küchen-Arbeiter </label>
+            <input
+              type="number"
+              name="numberOfWorkers"
+              v-model="numberOfWorkers_kitchen"
+            />
+          </div>
         </div>
 
+        <div class="inputsGroup">
+          <div class="inputLabelContainer">
+            <label for="umsatz">Umsatz </label>
+            <input type="number" name="umsatz" v-model="sales" />
+          </div>
+          <div class="inputLabelContainer">
+            <label for="hostel">Hostel </label>
+            <input type="number" name="hostel" v-model="hostel" />
+          </div>
+        </div>
         <div class="calcNowCtaContainer">
           <div
             :class="[ 'button','noPrint']"
-            @click="addStaffDiscountEntry"
+            @click="calculateWastes"
           >
             Ok
           </div>
-          <Transition>
-            <span v-if="shouldShowStaffDiscountError" :style="{fontSize: '11px', color: '#8a2525', background: 'bisque', marginLeft: '4px', alignSelf: 'center'}">
-              Chill! Das Feature ist noch nicht fertig..
-            </span>
-          </Transition>
+        </div>
+      </div>
+
+      <div class="inputsAreaLabel">
+        <span>Personalverzehr (außer Dienst): </span>
+        <img alt="T&P" height="15" width="15" class="noPrint hintTrigger" src="../assets/info.png" @click="handleHintTriggerClick_staffDiscount" />
+        <Transition>
+          <div class="hint" v-if="shouldShowStaffDiscountHint">
+            <img alt="T&P" height="15" width="15" class="noPrint hintTrigger" src="../assets/bulb.png" @click="handleHintTriggerClick_staffDiscount" />
+            <span>Wenn ein Angestellter außerhalb des Deinstes etwas verzehrt, hier bitte den Namen und den Rabatt (den nicht gezahlten Teil des Originalpreises) angeben!</span>
+          </div>
+        </Transition>
+      </div>
+      <div class="inputs">
+        <div class="inputsGroup">
+          <div class="inputLabelContainer">
+            <label for="numberOfWorkers">Name </label>
+            <input
+              type="text"
+              name="staffDiscountName"
+              v-model="staffDiscount_name"
+              @change="handleStaffDiscountNameInput"
+            />
+          </div>
+          <div class="inputLabelContainer">
+            <label for="numberOfWorkers">Rabatt (€) </label>
+            <input
+              type="text"
+              name="staffDiscountDiscount"
+              v-model="staffDiscount_name"
+              @change="handleStaffDiscountNameInput"
+            />
+          </div>
+
+          <div class="calcNowCtaContainer">
+            <div
+              :class="[ 'button','noPrint']"
+              @click="addStaffDiscountEntry"
+            >
+              Ok
+            </div>
+            <Transition>
+              <span v-if="shouldShowStaffDiscountError" :style="{fontSize: '11px', color: '#8a2525', background: 'bisque', marginLeft: '4px', alignSelf: 'center'}">
+                Chill! Das Feature ist noch nicht fertig..
+              </span>
+            </Transition>
+          </div>
         </div>
       </div>
     </div>
@@ -904,7 +907,8 @@ label {
     border-left: 1px solid black !important;
   }
   .salesAndHostel,
-  .workers {
+  .workers,
+  .summations {
     border: none !important;
   }
 }
