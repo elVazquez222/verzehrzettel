@@ -1,6 +1,7 @@
 s<!-- eslint-disable prettier/prettier -->
 <template>
   <div class="verzehrZettelForm" :id="shadowKey">
+    {{drinksList}}
     <div class="formHeader">
       <div class="formHeaderElement">Getränk:</div>
       <div class="formHeaderElement smallerColumn">Preis:</div>
@@ -680,8 +681,14 @@ export default {
     const getExtraClass = (drink) => {
       if(drink.wastedByService !== undefined
           || (drink.wastedByKitchen !== undefined && drink.wastedByKitchen.costSum > 0)
+          || (drink.wastedByService !== undefined && drink.wastedByService.count > 0)
           || (drink.giveAway !== undefined && drink.giveAway.costSum > 0)
           || (drink.waste !== undefined && drink.waste.costSum > 0)) {
+            console.log(drink);
+            console.log((drink.wastedByKitchen !== undefined && drink.wastedByKitchen.costSum > 0));
+            console.log((drink.wastedByService !== undefined && drink.wastedByService.count > 0));
+            console.log((drink.giveAway !== undefined && drink.giveAway.costSum > 0));
+            console.log((drink.waste !== undefined && drink.waste.costSum > 0));
         rowEven = !rowEven
         return rowEven ? 'highlightedRow_light' : 'highlightedRow_dark';
       } else if(shouldHideEmptyRows.value){
