@@ -88,7 +88,6 @@ s<!-- eslint-disable prettier/prettier -->
             type="number"
             name="numberOfWorkers"
             v-model="numberOfWorkers_service"
-            @change="handleNumberOfWorkersChange"
           />
         </div>
         <div class="inputLabelContainer">
@@ -97,14 +96,7 @@ s<!-- eslint-disable prettier/prettier -->
             type="number"
             name="numberOfWorkers"
             v-model="numberOfWorkers_kitchen"
-            @change="handleNumberOfWorkersChange"
           />
-          <!-- <div
-            :class="['button', 'noPrint', workersButtonDisabled && 'disabled']"
-            @click="handleNumberOfWorkersSubmit"
-          >
-            Ok
-          </div> -->
         </div>
       </div>
 
@@ -189,6 +181,8 @@ export default {
     msg: String,
   },
   setup() {
+    let rowEven = true;
+
     const shadowKey = ref(Math.random());
     const consumptionByEachWorker = 15;
     const consumptionByWorkersSplit = 3;
@@ -196,6 +190,8 @@ export default {
     const percentageOfWasteBySales = Math.random() + 6; // Zahl zwischen 6 und 7
     const percentageOfGiveawaysBySales = 10 - percentageOfWasteBySales;
     const drinksList = ref([...drinks]);
+    const shouldHideEmptyRows = ref(true);
+    const staffDiscountEntries = ref([{name: "Steve", discount: "6.55"}]);
 
     const numberOfWorkers_service = ref(0);
     const numberOfWorkers_kitchen = ref(0);
@@ -211,7 +207,6 @@ export default {
     const sumOfWasteValue = ref(null);
     const sumOfGiveawaysValue = ref(null);
 
-    const workersButtonDisabled = ref(true);
     const salesAndHostelButtonDisabled = ref(true);
     const salesButtonDisabled = ref(true);
 
@@ -228,14 +223,9 @@ export default {
       return drink;
     };
 
-    const handleNumberOfWorkersChange = () => {
-      workersButtonDisabled.value = false;
-    };
-
     const calculateWastes = () => {
       drinksList.value = [...drinks];
       setTimeout(() => {
-        workersButtonDisabled.value = true;
         calcConsumptionByWorkers();
         calcWasteAndGiveaways();
       }, 1);
@@ -662,7 +652,10 @@ export default {
           || (drink.wastedByKitchen !== undefined && drink.wastedByKitchen.costSum > 0)
           || (drink.giveAway !== undefined && drink.giveAway.costSum > 0)
           || (drink.waste !== undefined && drink.waste.costSum > 0)) {
-        return 'highlightedRow';
+        rowEven = !rowEven
+        return rowEven ? 'highlightedRow_light' : 'highlightedRow_dark';
+      } else if(shouldHideEmptyRows.value){
+        return 'hideMe'
       }
       return null;
     }
@@ -678,7 +671,7 @@ export default {
       numberOfWorkers_service,
       numberOfWorkers_kitchen,
       drinksList,
-      workersButtonDisabled,
+      staffDiscountEntries,
       salesAndHostelButtonDisabled,
       salesButtonDisabled,
       calculatedConsumption_service,
@@ -688,7 +681,6 @@ export default {
       shouldShowStaffDiscountHint,
       shouldShowStaffDiscountError,
 
-      handleNumberOfWorkersChange,
       calculateWastes,
       handleHintTriggerClick_staffDiscount,
       getExtraClass,
@@ -721,8 +713,12 @@ label {
   position: relative;
 }
 
-.highlightedRow {
-  background: rgba(20, 200, 20, .3);
+.highlightedRow_light {
+  background: rgba(118, 221, 118, 0.7);
+}
+
+.highlightedRow_dark {
+  background: rgba(10, 120, 10, 0.3);
 }
 
 .verzehrZettelForm {
@@ -765,6 +761,10 @@ label {
   background: cadetblue;
   padding: 4px;
   font-size: 12px;
+}
+
+.hideMe {
+  display: none;
 }
 
 .inputs {
