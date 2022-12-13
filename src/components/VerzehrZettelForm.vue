@@ -831,7 +831,7 @@ label {
 
 .drinkRow {
   max-height: 20px;
-  transition: max-height 300ms cubic-bezier(0, 0, 0.86,-0.15);
+  transition: max-height 200ms cubic-bezier(0, 0, 0.86,-0.15);
 }
 
 .hideMe {
