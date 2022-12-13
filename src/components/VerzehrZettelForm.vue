@@ -823,8 +823,14 @@ label {
   font-size: 12px;
 }
 
+.drinkRow {
+  max-height: 20px;
+  transition: max-height 300ms cubic-bezier(0, 0, 0.86,-0.15);
+}
+
 .hideMe {
-  display: none;
+  max-height: 0px;
+  visibility: hidden;
 }
 
 .inputs {
