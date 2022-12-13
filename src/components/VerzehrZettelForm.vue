@@ -13,6 +13,7 @@ s<!-- eslint-disable prettier/prettier -->
       <div class="formHeaderElement">Geschl. Gesellschaft:</div>
       <div class="formHeaderElement">Pers. Verzehr:</div>
     </div>
+
     <div class="drinkRow" v-for="drink in drinksList" :class="[getExtraClass(drink)]" :key="drink.name">
       <span
         class="drinkColumn"
@@ -77,7 +78,12 @@ s<!-- eslint-disable prettier/prettier -->
       <span class="drinkColumn"></span>
     </div>
 
-    <span class="resetBtn" @click="reset">Alles zurücksetzen</span>
+
+    <div>
+      <span class="resetBtn" @click="reset">Alles zurücksetzen</span>
+      <input type="checkbox" name="shouldHideEmptyRows" id="shouldHideEmptyRows" v-model="shouldHideEmptyRows" />
+      <span class="shouldHideEmptyRowsLabel" @click="toggleShouldHideEmptyRows">Leere Zeilen ausblenden</span>
+    </div>
 
     <div class="inputsAreaLabel">Dienstverzehr, Verlust, Werbung:</div>
     <div class="inputs">
@@ -647,6 +653,10 @@ export default {
       shouldShowStaffDiscountError.value = true;
     }
 
+    const toggleShouldHideEmptyRows = () => {
+      shouldHideEmptyRows.value = !shouldHideEmptyRows.value;
+    }
+
     const getExtraClass = (drink) => {
       if(drink.wastedByService !== undefined
           || (drink.wastedByKitchen !== undefined && drink.wastedByKitchen.costSum > 0)
@@ -680,11 +690,13 @@ export default {
       sumOfGiveawaysValue,
       shouldShowStaffDiscountHint,
       shouldShowStaffDiscountError,
+      shouldHideEmptyRows,
 
       calculateWastes,
       handleHintTriggerClick_staffDiscount,
       getExtraClass,
       addStaffDiscountEntry,
+      toggleShouldHideEmptyRows,
       reset
     };
   },
@@ -709,16 +721,24 @@ label {
   top: 4px;
 }
 
+#shouldHideEmptyRows {
+  margin-left: 2rem;
+}
+
+.shouldHideEmptyRowsLabel {
+  cursor: pointer;
+}
+
 .inputLabelContainer {
   position: relative;
 }
 
 .highlightedRow_light {
-  background: rgba(118, 221, 118, 0.7);
+  background: rgba(118, 221, 118, 0.2);
 }
 
 .highlightedRow_dark {
-  background: rgba(10, 120, 10, 0.3);
+  background: rgba(16, 158, 16, 0.23);
 }
 
 .verzehrZettelForm {
