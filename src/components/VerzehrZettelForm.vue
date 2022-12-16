@@ -102,14 +102,13 @@ s<!-- eslint-disable prettier/prettier -->
         </div>
       </div>
 
-      <div class="staffDiscounts">
+      <div class="staffDiscounts" v-if="staffDiscountEntries.length > 0">
         <div class="staffDiscountHeadline">
           Pers. Verzehr:
         </div>
         <div v-for="discount in staffDiscountEntries" :key="discount.id" class="persDiscountElement">
           <div>{{discount.name}}: {{discount.discount}} €</div>
           <div class="deleteDiscountBtn" title="entfernen" @click="removeDiscountElement(discount.id)">X</div>
-
         </div>
       </div>
     </div>
@@ -256,14 +255,26 @@ export default {
     const shouldShowStaffDiscountHint = ref(false);
     const shouldShowStaffDiscountError = ref(false);
 
+    const allowedStaffDrinks = [0, 10, 11, 12, 13, 14, 17, 18];
+
     const getRandomIndex = (min = 0, max = drinksList.value.length - 1) => {
       const index = Math.round(Math.random() * (max - min) + min);
       return index;
     };
 
-    const getRandomDrink = () => {
-      const drink = drinksList.value[getRandomIndex()];
-      return drink;
+    const getRandomDrink = (staffDrink) => {
+      let randomIndex = getRandomIndex();
+
+      if(staffDrink) {
+        while(!allowedStaffDrinks.includes(randomIndex)) {
+          randomIndex = getRandomIndex();
+        }
+        const drink = drinksList.value[randomIndex];
+        return drink;
+      } else {
+        const drink = drinksList.value[randomIndex];
+        return drink;
+      }
     };
 
     const calculateWastes = () => {
@@ -281,17 +292,17 @@ export default {
 
       // Service
       if (numberOfWorkers_service.value > 0) {
-        const splitOneProduct_service = getRandomDrink();
+        const splitOneProduct_service = getRandomDrink(true);
         drinksList.value[splitOneProduct_service.index] = {
           ...splitOneProduct_service,
           wastedByService: { count: 0, costSum: 0 },
         };
-        const splitTwoProduct_service = getRandomDrink();
+        const splitTwoProduct_service = getRandomDrink(true);
         drinksList.value[splitTwoProduct_service.index] = {
           ...splitTwoProduct_service,
           wastedByService: { count: 0, costSum: 0 },
         };
-        const splitThreeProduct_service = getRandomDrink();
+        const splitThreeProduct_service = getRandomDrink(true);
         drinksList.value[splitThreeProduct_service.index] = {
           ...splitThreeProduct_service,
           wastedByService: { count: 0, costSum: 0 },
@@ -360,17 +371,17 @@ export default {
           numberOfWorkers_kitchen.value * consumptionByEachWorker;
         calculatedConsumption_kitchen.value = 0;
 
-        const splitOneProduct_kitchen = getRandomDrink();
+        const splitOneProduct_kitchen = getRandomDrink(true);
         drinksList.value[splitOneProduct_kitchen.index] = {
           ...splitOneProduct_kitchen,
           wastedByKitchen: { count: 0, costSum: 0 },
         };
-        const splitTwoProduct_kitchen = getRandomDrink();
+        const splitTwoProduct_kitchen = getRandomDrink(true);
         drinksList.value[splitTwoProduct_kitchen.index] = {
           ...splitTwoProduct_kitchen,
           wastedByKitchen: { count: 0, costSum: 0 },
         };
-        const splitThreeProduct_kitchen = getRandomDrink();
+        const splitThreeProduct_kitchen = getRandomDrink(true);
         drinksList.value[splitThreeProduct_kitchen.index] = {
           ...splitThreeProduct_kitchen,
           wastedByKitchen: { count: 0, costSum: 0 },
