@@ -902,10 +902,10 @@ label {
   font-size: 14px;
   text-align: center;
   flex: 1;
+  gap: 10px;
 
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
 }
 .staffDiscountHeadline {
   font-size: 13px;
