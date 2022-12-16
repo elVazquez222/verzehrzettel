@@ -107,7 +107,7 @@ s<!-- eslint-disable prettier/prettier -->
           Pers. Verzehr:
         </div>
         <div v-for="discount in staffDiscountEntries" :key="discount.id" class="persDiscountElement">
-          {{discount.name}}: {{discount.discount}}
+          {{discount.name}}: {{discount.discount}} €
         </div>
       </div>
     </div>
@@ -161,7 +161,10 @@ s<!-- eslint-disable prettier/prettier -->
         <Transition>
           <div class="hint" v-if="shouldShowStaffDiscountHint">
             <img alt="T&P" height="15" width="15" class="noPrint hintTrigger" src="../assets/bulb.png" @click="handleHintTriggerClick_staffDiscount" />
-            <span>Wenn ein Angestellter außerhalb des Deinstes etwas verzehrt, hier bitte den Namen und den Rabatt (den nicht gezahlten Teil des Originalpreises) angeben!</span>
+            <div class="hintTextElements">
+              <div>Wenn ein Angestellter außerhalb des Deinstes etwas verzehrt, hier bitte den Namen und den Rabatt (den nicht gezahlten Teil des Originalpreises) angeben!</div>
+              <div>Den Bong mit den anderen Belegen aufheben !! </div>
+            </div>
           </div>
         </Transition>
       </div>
@@ -181,8 +184,8 @@ s<!-- eslint-disable prettier/prettier -->
             <input
               type="text"
               name="staffDiscountDiscount"
-              v-model="staffDiscount_name"
-              @change="handleStaffDiscountNameInput"
+              v-model="staffDiscount_value"
+              @change="handleStaffDiscountValueInput"
             />
           </div>
 
@@ -195,7 +198,7 @@ s<!-- eslint-disable prettier/prettier -->
             </div>
             <Transition>
               <span v-if="shouldShowStaffDiscountError" :style="{fontSize: '11px', color: '#8a2525', background: 'bisque', marginLeft: '4px', alignSelf: 'center'}">
-                Chill! Das Feature ist noch nicht fertig..
+                Dude! Da fehlt was...
               </span>
             </Transition>
           </div>
@@ -228,6 +231,8 @@ export default {
     const drinksList = ref([...drinks]);
     const shouldHideEmptyRows = ref(false);
     const staffDiscountEntries = ref([{id: Date.now(), name: "Steve", discount: "6.55"}]);
+    const staffDiscount_name = ref(null);
+    const staffDiscount_value = ref(null);
 
     const numberOfWorkers_service = ref(0);
     const numberOfWorkers_kitchen = ref(0);
@@ -675,12 +680,18 @@ export default {
     }
 
     const addStaffDiscountEntry = () => {
-      if (!shouldShowStaffDiscountError.value) {
-        setTimeout(() => {
-          shouldShowStaffDiscountError.value = false;
-        }, 2500)
+      shouldShowStaffDiscountError.value = false;
+      if (staffDiscount_name.value === null
+          || staffDiscount_value.value === null
+          || staffDiscount_name.value.trim() === ''
+          || staffDiscount_value.value === ''
+      ) {
+        shouldShowStaffDiscountError.value = true;
+        return;
       }
-      shouldShowStaffDiscountError.value = true;
+      staffDiscountEntries.value = [...staffDiscountEntries.value, {id: Date.now(), name: staffDiscount_name.value, discount: staffDiscount_value.value }];
+      staffDiscount_name.value = null;
+      staffDiscount_value.value = null;
     }
 
     const toggleShouldHideEmptyRows = () => {
@@ -726,6 +737,8 @@ export default {
       shouldShowStaffDiscountHint,
       shouldShowStaffDiscountError,
       shouldHideEmptyRows,
+      staffDiscount_value,
+      staffDiscount_name,
 
       calculateWastes,
       handleHintTriggerClick_staffDiscount,
@@ -810,6 +823,9 @@ label {
   text-align: center;
   font-size: 13px;
 }
+.formHeader, .staffDiscountHeadline {
+  margin-bottom: 4px;
+}
 .drinkRow,
 .formHeader {
   display: flex;
@@ -841,12 +857,11 @@ label {
   text-align: center;
   flex: 1;
 }
-
 .staffDiscountHeadline {
   font-size: 13px;
 }
 .persDiscountElement {
-  margin: 0 2px 4px 4px;
+  margin: 0 2px 10px 4px;
   padding: 3px;
   background: whitesmoke;
   /* border: 1px solid grey; */
