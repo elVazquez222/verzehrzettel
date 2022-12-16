@@ -170,6 +170,7 @@ s<!-- eslint-disable prettier/prettier -->
             <div class="hintTextElements">
               <div>Wenn ein Angestellter außerhalb des Deinstes etwas verzehrt, hier bitte den Namen und den Rabatt (den nicht gezahlten Teil des Originalpreises) angeben!</div>
               <div>Den Bong mit den anderen Belegen aufheben !! </div>
+              <div>Bitte Dezimalpunkt statt Komma verwenden! </div>
             </div>
           </div>
         </Transition>
@@ -191,8 +192,11 @@ s<!-- eslint-disable prettier/prettier -->
               type="text"
               name="staffDiscountDiscount"
               v-model="staffDiscount_value"
-              @change="handleStaffDiscountValueInput"
+              @keydown="handleStaffDiscountValueInput"
             />
+            <div v-if="showDecimalWarning" class="decimalWarning">
+              Bitte Punkt statt Komma verwenden!<br />Gracias!
+            </div>
           </div>
 
           <div class="calcNowCtaContainer">
@@ -258,6 +262,7 @@ export default {
     const salesButtonDisabled = ref(true);
 
     const shouldShowStaffDiscountHint = ref(false);
+    const showDecimalWarning = ref(false);
     const shouldShowStaffDiscountError = ref(false);
 
     const allowedStaffDrinks = [0, 10, 11, 12, 13, 14, 17, 18];
@@ -720,9 +725,15 @@ export default {
       let sum = 0;
       staffDiscountEntries.value.forEach(el => {
         sum += el.discount * 1;
-      })
-
+      });
       return sum;
+    }
+
+    const handleStaffDiscountValueInput = (event) => {
+       showDecimalWarning.value = false;
+      if(event.keyCode == 188){
+        showDecimalWarning.value = true;
+      }
     }
 
     const toggleShouldHideEmptyRows = () => {
@@ -770,6 +781,7 @@ export default {
       shouldHideEmptyRows,
       staffDiscount_value,
       staffDiscount_name,
+      showDecimalWarning,
 
       calculateWastes,
       handleHintTriggerClick_staffDiscount,
@@ -778,6 +790,7 @@ export default {
       toggleShouldHideEmptyRows,
       removeDiscountElement,
       getStaffDiscountSum,
+      handleStaffDiscountValueInput,
       reset
     };
   },
@@ -939,6 +952,12 @@ label {
 .deleteDiscountBtn:hover {
   color: red;
   font-weight: bold;;
+}
+
+.decimalWarning {
+  font-size: 10px;
+  margin-top: 2px;
+  color: red;
 }
 
 .inputsAreaLabel {
