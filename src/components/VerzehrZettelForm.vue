@@ -107,7 +107,9 @@ s<!-- eslint-disable prettier/prettier -->
           Pers. Verzehr:
         </div>
         <div v-for="discount in staffDiscountEntries" :key="discount.id" class="persDiscountElement">
-          {{discount.name}}: {{discount.discount}} €
+          <div>{{discount.name}}: {{discount.discount}} €</div>
+          <div class="deleteDiscountBtn" title="entfernen" @click="removeDiscountElement(discount.id)">X</div>
+
         </div>
       </div>
     </div>
@@ -230,7 +232,7 @@ export default {
     const percentageOfGiveawaysBySales = 10 - percentageOfWasteBySales;
     const drinksList = ref([...drinks]);
     const shouldHideEmptyRows = ref(false);
-    const staffDiscountEntries = ref([{id: Date.now(), name: "Steve", discount: "6.55"}]);
+    const staffDiscountEntries = ref([]);
     const staffDiscount_name = ref(null);
     const staffDiscount_value = ref(null);
 
@@ -694,6 +696,10 @@ export default {
       staffDiscount_value.value = null;
     }
 
+    const removeDiscountElement = (id) => {
+      staffDiscountEntries.value = staffDiscountEntries.value.filter(el => el.id !== id)
+    }
+
     const toggleShouldHideEmptyRows = () => {
       shouldHideEmptyRows.value = !shouldHideEmptyRows.value;
     }
@@ -745,6 +751,7 @@ export default {
       getExtraClass,
       addStaffDiscountEntry,
       toggleShouldHideEmptyRows,
+      removeDiscountElement,
       reset
     };
   },
@@ -885,6 +892,19 @@ label {
   z-index: 99999;
   width: 102%;
   margin-left: -1px;
+}
+.deleteDiscountBtn {
+  color: darkgray;
+  font-size: 10px;
+  text-align: right;
+  position: absolute;
+  right: 2px;
+  top: 1px;
+  cursor: pointer;
+}
+.deleteDiscountBtn:hover {
+  color: red;
+  font-weight: bold;;
 }
 
 .inputsAreaLabel {
