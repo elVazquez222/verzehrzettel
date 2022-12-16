@@ -103,12 +103,17 @@ s<!-- eslint-disable prettier/prettier -->
       </div>
 
       <div class="staffDiscounts" v-if="staffDiscountEntries.length > 0">
-        <div class="staffDiscountHeadline">
-          Pers. Verzehr:
+        <div class="staffDiscountElementList">
+          <div class="staffDiscountHeadline">
+            Pers. Verzehr:
+          </div>
+          <div v-for="discount in staffDiscountEntries" :key="discount.id" class="persDiscountElement">
+            <div>{{discount.name}}: {{discount.discount}} €</div>
+            <div class="deleteDiscountBtn noPrint" title="entfernen" @click="removeDiscountElement(discount.id)">X</div>
+          </div>
         </div>
-        <div v-for="discount in staffDiscountEntries" :key="discount.id" class="persDiscountElement">
-          <div>{{discount.name}}: {{discount.discount}} €</div>
-          <div class="deleteDiscountBtn" title="entfernen" @click="removeDiscountElement(discount.id)">X</div>
+        <div class="staffDiscountSummation persDiscountElement">
+          <div>Summe: {{getStaffDiscountSum()}} €</div>
         </div>
       </div>
     </div>
@@ -711,6 +716,15 @@ export default {
       staffDiscountEntries.value = staffDiscountEntries.value.filter(el => el.id !== id)
     }
 
+    const getStaffDiscountSum = () => {
+      let sum = 0;
+      staffDiscountEntries.value.forEach(el => {
+        sum += el.discount * 1;
+      })
+
+      return sum;
+    }
+
     const toggleShouldHideEmptyRows = () => {
       shouldHideEmptyRows.value = !shouldHideEmptyRows.value;
     }
@@ -763,6 +777,7 @@ export default {
       addStaffDiscountEntry,
       toggleShouldHideEmptyRows,
       removeDiscountElement,
+      getStaffDiscountSum,
       reset
     };
   },
@@ -874,11 +889,16 @@ label {
   font-size: 14px;
   text-align: center;
   flex: 1;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 }
 .staffDiscountHeadline {
   font-size: 13px;
 }
 .persDiscountElement {
+  font-size: 13px;
   margin: 0 2px 10px 4px;
   padding: 3px;
   background: whitesmoke;
@@ -903,6 +923,9 @@ label {
   z-index: 99999;
   width: 102%;
   margin-left: -1px;
+}
+.staffDiscountSummation {
+  font-weight: bold;
 }
 .deleteDiscountBtn {
   color: darkgray;
