@@ -1,105 +1,114 @@
 s<!-- eslint-disable prettier/prettier -->
 <template>
   <div class="verzehrZettelForm" :id="shadowKey">
-    {{drinksList}}
-    <div class="formHeader">
-      <div class="formHeaderElement">Getränk:</div>
-      <div class="formHeaderElement smallerColumn">Preis:</div>
-      <div class="formHeaderElement">Personal:</div>
-      <div class="formHeaderElement">Küche/Essen:</div>
-      <div class="formHeaderElement">Chefs:</div>
-      <div class="formHeaderElement">Verlust:</div>
-      <div class="formHeaderElement">Werbung:</div>
-      <div class="formHeaderElement">Geschl. Gesellschaft:</div>
-      <div class="formHeaderElement">Pers. Verzehr:</div>
-    </div>
+    <div class="drinksListAndStaffDiscounts">
+      <div class="drinksList">
+        <div class="formHeader">
+          <div class="formHeaderElement">Getränk:</div>
+          <div class="formHeaderElement smallerColumn">Preis:</div>
+          <div class="formHeaderElement">Personal:</div>
+          <div class="formHeaderElement">Küche/Essen:</div>
+          <div class="formHeaderElement">Chefs:</div>
+          <div class="formHeaderElement">Verlust:</div>
+          <div class="formHeaderElement">Werbung:</div>
+          <div class="formHeaderElement">Geschl. Ges.:</div>
+        </div>
 
-    <div class="drinkRow" v-for="drink in drinksList" :class="[getExtraClass(drink)]" :key="drink.name">
-      <span
-        class="drinkColumn"
-        :style="{
-          borderLeft: `5px solid ${
-            drink.categoryColor ? drink.categoryColor : 'grey'
-          }`,
-        }"
-        >{{ drink.name }}</span
-      >
-      <span class="drinkColumn smallerColumn">{{ drink.displayPrice }}</span>
-      <span class="drinkColumn drinksListByService">
-        <span class="drinkField" v-if="drink.wastedByService && drink.wastedByService.count > 0">
-          {{`${drink.wastedByService.count}`}}
-          <span class="drinkFieldCost">
-            {{`(${drink.wastedByService.costSum}€)`}}
+        <div class="drinkRow" v-for="drink in drinksList" :class="[getExtraClass(drink)]" :key="drink.name">
+          <span
+            class="drinkColumn"
+            :style="{
+              borderLeft: `5px solid ${
+                drink.categoryColor ? drink.categoryColor : 'grey'
+              }`,
+            }"
+            >{{ drink.name }}</span
+          >
+          <span class="drinkColumn smallerColumn">{{ drink.displayPrice }}</span>
+          <span class="drinkColumn drinksListByService">
+            <span class="drinkField" v-if="drink.wastedByService && drink.wastedByService.count > 0">
+              {{`${drink.wastedByService.count}`}}
+              <span class="drinkFieldCost">
+                {{`(${drink.wastedByService.costSum}€)`}}
+              </span>
+            </span>
           </span>
-        </span>
-      </span>
-      <span class="drinkColumn drinksListByKitchen">
-        <span class="drinkField" v-if="drink.wastedByKitchen && drink.wastedByKitchen.count > 0">
-          {{`${drink.wastedByKitchen.count}`}}
-          <span class="drinkFieldCost">
-             {{`(${drink.wastedByKitchen.costSum}€)`}}
+          <span class="drinkColumn drinksListByKitchen">
+            <span class="drinkField" v-if="drink.wastedByKitchen && drink.wastedByKitchen.count > 0">
+              {{`${drink.wastedByKitchen.count}`}}
+              <span class="drinkFieldCost">
+                {{`(${drink.wastedByKitchen.costSum}€)`}}
+              </span>
+            </span>
           </span>
-        </span>
-      </span>
-      <span class="drinkColumn">{{ drink.wasted }}</span>
-      <span class="drinkColumn">
-        <span class="drinkField" v-if="drink.waste && drink.waste.count > 0">
-          <span class="count">
-            {{`${drink.waste.count}`}}
+          <span class="drinkColumn">{{ drink.wasted }}</span>
+          <span class="drinkColumn">
+            <span class="drinkField" v-if="drink.waste && drink.waste.count > 0">
+              <span class="count">
+                {{`${drink.waste.count}`}}
+              </span>
+              <span class="drinkFieldCost">
+                {{`(${drink.waste.costSum} €)`}}
+              </span>
+            </span>
           </span>
-          <span class="drinkFieldCost">
-            {{`(${drink.waste.costSum} €)`}}
+          <span class="drinkColumn">
+            <span class="drinkField" v-if="drink.giveAway && drink.giveAway.count > 0">
+              {{`${drink.giveAway.count}`}}
+              <span class="drinkFieldCost">
+              {{`(${drink.giveAway.costSum}€)`}}
+              </span>
+            </span>
           </span>
-        </span>
-      </span>
-      <span class="drinkColumn">
-        <span class="drinkField" v-if="drink.giveAway && drink.giveAway.count > 0">
-          {{`${drink.giveAway.count}`}}
-          <span class="drinkFieldCost">
-           {{`(${drink.giveAway.costSum}€)`}}
-          </span>
-        </span>
-      </span>
-      <span class="drinkColumn">{{ drink.wasted }}</span>
-      <span class="drinkColumn">{{ drink.wasted }}</span>
-    </div>
+          <span class="drinkColumn">{{ drink.wasted }}</span>
+        </div>
 
-    <div class="summations">
-      <span class="drinkColumn">Summe</span>
-      <span class="drinkColumn smallerColumn"></span>
-      <span class="drinkColumn">
-        <span v-if="calculatedConsumption_service > 0">
-          {{ Math.round((calculatedConsumption_service + Number.EPSILON) * 100) / 100 }}€
-        </span>
-      </span>
-      <span class="drinkColumn">
-        <span v-if="calculatedConsumption_kitchen > 0">
-          {{ Math.round((calculatedConsumption_kitchen + Number.EPSILON) * 100) / 100 }}€
-        </span>
-      </span>
-      <span class="drinkColumn"></span>
-      <span class="drinkColumn">
-        <span v-if="sumOfWasteValue > 0">
-          {{ Math.round((sumOfWasteValue + Number.EPSILON) * 100) / 100 }}€
-        </span>
-      </span>
-      <span class="drinkColumn">
-        <span v-if="sumOfWasteValue > 0">
-          {{ Math.round((sumOfGiveawaysValue + Number.EPSILON) * 100) / 100 }}€
-        </span>
-      </span>
-      <span class="drinkColumn"></span>
-      <span class="drinkColumn"></span>
-    </div>
+        <div class="summations">
+          <span class="drinkColumn">Summe</span>
+          <span class="drinkColumn smallerColumn"></span>
+          <span class="drinkColumn">
+            <span v-if="calculatedConsumption_service > 0">
+              {{ Math.round((calculatedConsumption_service + Number.EPSILON) * 100) / 100 }}€
+            </span>
+          </span>
+          <span class="drinkColumn">
+            <span v-if="calculatedConsumption_kitchen > 0">
+              {{ Math.round((calculatedConsumption_kitchen + Number.EPSILON) * 100) / 100 }}€
+            </span>
+          </span>
+          <span class="drinkColumn"></span>
+          <span class="drinkColumn">
+            <span v-if="sumOfWasteValue > 0">
+              {{ Math.round((sumOfWasteValue + Number.EPSILON) * 100) / 100 }}€
+            </span>
+          </span>
+          <span class="drinkColumn">
+            <span v-if="sumOfWasteValue > 0">
+              {{ Math.round((sumOfGiveawaysValue + Number.EPSILON) * 100) / 100 }}€
+            </span>
+          </span>
+          <span class="drinkColumn"></span>
+        </div>
 
 
-    <div class="noPrint tableFooter">
-      <span class="resetBtn" @click="reset">Alles zurücksetzen</span>
-      <div class="hideEmptyRowsToggle">
-        <input type="checkbox" name="shouldHideEmptyRows" id="shouldHideEmptyRows" v-model="shouldHideEmptyRows" />
-        <span class="shouldHideEmptyRowsLabel" @click="toggleShouldHideEmptyRows">
-          Leere Zeilen ausblenden
-        </span>
+        <div class="noPrint tableFooter">
+          <span class="resetBtn" @click="reset">Alles zurücksetzen</span>
+          <div class="hideEmptyRowsToggle">
+            <input type="checkbox" name="shouldHideEmptyRows" id="shouldHideEmptyRows" v-model="shouldHideEmptyRows" />
+            <span class="shouldHideEmptyRowsLabel" @click="toggleShouldHideEmptyRows">
+              Leere Zeilen ausblenden
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <div class="staffDiscounts">
+        <div class="staffDiscountHeadline">
+          Pers. Verzehr:
+        </div>
+        <div v-for="discount in staffDiscountEntries" :key="discount.id" class="persDiscountElement">
+          {{discount.name}}: {{discount.discount}}
+        </div>
       </div>
     </div>
 
@@ -218,7 +227,7 @@ export default {
     const percentageOfGiveawaysBySales = 10 - percentageOfWasteBySales;
     const drinksList = ref([...drinks]);
     const shouldHideEmptyRows = ref(false);
-    const staffDiscountEntries = ref([{name: "Steve", discount: "6.55"}]);
+    const staffDiscountEntries = ref([{id: Date.now(), name: "Steve", discount: "6.55"}]);
 
     const numberOfWorkers_service = ref(0);
     const numberOfWorkers_kitchen = ref(0);
@@ -731,6 +740,13 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+.verzehrZettelForm {
+  margin: 1rem 0;
+  width: 95vw;
+  max-width: 1400px;
+  font-size: 15px;
+}
+
 button {
   margin-left: 5px;
   cursor: pointer;
@@ -778,7 +794,8 @@ label {
   top: 1px;
   right: 1px;
   font-size: 10px;
-  background: rgba(255, 255, 255, .5);
+  background:
+  rgba(255, 255, 255, .5);
   padding: 0 1px;
 }
 
@@ -788,12 +805,6 @@ label {
 
 .highlightedRow_dark {
   background: rgba(16, 158, 16, 0.23);
-}
-
-.verzehrZettelForm {
-  margin: 1rem 0;
-  width: 95vw;
-  max-width: 1400px;
 }
 .formHeader {
   text-align: center;
@@ -815,6 +826,50 @@ label {
   flex: 1;
   padding-right: 4px;
   text-align: center;
+}
+
+.drinksListAndStaffDiscounts {
+  display: flex;
+}
+
+.drinksList {
+  flex: 6;
+}
+
+.staffDiscounts {
+  font-size: 14px;
+  text-align: center;
+  flex: 1;
+}
+
+.staffDiscountHeadline {
+  font-size: 13px;
+}
+.persDiscountElement {
+  margin: 0 2px 4px 4px;
+  padding: 3px;
+  background: whitesmoke;
+  /* border: 1px solid grey; */
+  position: relative;
+  padding-bottom: 20px;
+  border: 1px solid lightgray;
+  border-bottom: none;
+}
+.persDiscountElement::before {
+	content: '';
+	position: absolute;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	height: 10px;
+	background-size: 24px 48px;
+	background-repeat: repeat-x;
+	background-image: linear-gradient(315deg, transparent 34%, #fff 34%, #fff 66%, transparent 66%), linear-gradient(45deg, transparent 34%, #fff 34%, #fff 66%, transparent 66%);
+  border-left: 1px solid white;
+  border-right: 1px solid white;
+  z-index: 99999;
+  width: 102%;
+  margin-left: -1px;
 }
 
 .inputsAreaLabel {
@@ -920,6 +975,14 @@ label {
   .workers,
   .summations {
     border: none !important;
+  }
+  .persDiscountElement {
+    background: unset;
+    border: 1px solid black;
+    padding-bottom: 4px;
+  }
+  .persDiscountElement::before {
+    display: none;
   }
 }
 </style>
