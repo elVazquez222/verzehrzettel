@@ -118,8 +118,9 @@ s<!-- eslint-disable prettier/prettier -->
       </div>
     </div>
 
+<!-- CONTROLS -->
     <div class="noPrint">
-
+      <div class="disclaimer">Mit den folgenden Kontrollelemeneten kann ein <b>Beispiel</b> generiert werden. </div>
       <div class="inputsAreaLabel">Dienstverzehr, Verlust, Werbung:</div>
       <div class="inputs">
         <div class="inputsGroup">
@@ -960,8 +961,8 @@ label {
   color: red;
 }
 
-.inputsAreaLabel {
-  margin-top: 2rem;
+.disclaimer, .inputsAreaLabel {
+  margin-top: 1.5rem;
 }
 
 .hintTrigger {
