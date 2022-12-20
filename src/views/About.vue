@@ -1,5 +1,6 @@
 <template>
   <div class="about">
-    <h1>Ech jetzt..? Du brauchst ne Anleitung? Veganer!</h1>
+    <h1>Komm schon.. Das schaffst du auch ohne Anleitung!</h1>
+    <p>Spaß! Anleitung folgt..</p>
   </div>
 </template>

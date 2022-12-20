@@ -121,7 +121,17 @@ s<!-- eslint-disable prettier/prettier -->
 <!-- CONTROLS -->
     <div class="noPrint">
       <div class="disclaimer">Mit den folgenden Kontrollelemeneten kann ein <b>Beispiel</b> generiert werden. </div>
-      <div class="inputsAreaLabel">Dienstverzehr, Verlust, Werbung:</div>
+      <br />
+      <span class="inputsAreaLabel">Dienstverzehr, Verlust, Werbung:</span>
+      <img alt="T&P" height="15" width="15" class="noPrint hintTrigger" src="../assets/info.png" @click="handleHintTriggerClick_wastes" />
+      <Transition>
+        <div class="hint" v-if="shouldShowWastesHint" >
+          <div class="hintTextElements">
+            <div>Verzehr, Werbe-Ausschank und Schankverlust müssen gemäß der Vorgaben (siehe Anleitung) täglich erfasst werden.</div>
+          </div>
+        </div>
+      </Transition>
+
       <div class="inputs">
         <div class="inputsGroup">
           <div class="inputLabelContainer">
@@ -209,11 +219,17 @@ s<!-- eslint-disable prettier/prettier -->
             </div>
             <Transition>
               <span v-if="shouldShowStaffDiscountError" :style="{fontSize: '11px', color: '#8a2525', background: 'bisque', marginLeft: '4px', alignSelf: 'center'}">
-                Dude! Da fehlt was...
+                Da fehlt was...
               </span>
             </Transition>
           </div>
         </div>
+      </div>
+      <div
+        :class="[ 'saveButton','noPrint']"
+        @click="saveVerzehrzettel"
+      >
+        SPEICHERN
       </div>
     </div>
   </div>
@@ -263,6 +279,7 @@ export default {
     const salesButtonDisabled = ref(true);
 
     const shouldShowStaffDiscountHint = ref(false);
+    const shouldShowWastesHint = ref(false);
     const showDecimalWarning = ref(false);
     const shouldShowStaffDiscountError = ref(false);
 
@@ -702,6 +719,13 @@ export default {
     const handleHintTriggerClick_staffDiscount = () => {
       shouldShowStaffDiscountHint.value = !shouldShowStaffDiscountHint.value;
     }
+    const handleHintTriggerClick_wastes = () => {
+      shouldShowWastesHint.value = !shouldShowWastesHint.value;
+    }
+
+    const saveVerzehrzettel = () => {
+      window.print();
+    }
 
     const addStaffDiscountEntry = () => {
       shouldShowStaffDiscountError.value = false;
@@ -778,6 +802,7 @@ export default {
       sumOfWasteValue,
       sumOfGiveawaysValue,
       shouldShowStaffDiscountHint,
+      shouldShowWastesHint,
       shouldShowStaffDiscountError,
       shouldHideEmptyRows,
       staffDiscount_value,
@@ -786,12 +811,14 @@ export default {
 
       calculateWastes,
       handleHintTriggerClick_staffDiscount,
+      handleHintTriggerClick_wastes,
       getExtraClass,
       addStaffDiscountEntry,
       toggleShouldHideEmptyRows,
       removeDiscountElement,
       getStaffDiscountSum,
       handleStaffDiscountValueInput,
+      saveVerzehrzettel,
       reset
     };
   },
@@ -1042,6 +1069,20 @@ label {
 .button.disabled {
   background: lightgrey;
   color: grey;
+}
+
+.saveButton {
+  margin-left: auto;
+  cursor: pointer;
+  font-size: 12px;
+  padding: 6px 4px;
+  border-radius: 4px;
+  background: #184941;
+  color: white;
+  width: 100px;
+  height: 12px;
+  align-self: center;
+  text-align: center;
 }
 
 .v-enter-active {
